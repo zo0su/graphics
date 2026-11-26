@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>핵심 정리 퀴즈</title>
+<link rel="stylesheet" href="quiz.css">
+<style>
+  body {
+    margin: 0 auto;
+    max-width: 760px;
+    padding: 32px 16px 60px;
+    font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+    color: rgb(55, 53, 47);
+    background: #fff;
+  }
+  h1 { font-size: 1.6rem; margin: 0 0 6px; }
+  .back { color: rgba(55, 53, 47, 0.65); font-size: 0.95rem; text-decoration: none; }
+  .back:hover { text-decoration: underline; }
+  .picker a {
+    display: block; margin: 0 0 10px; padding: 14px 16px;
+    border: 1px solid #e6e6e4; border-radius: 8px;
+    color: inherit; text-decoration: none;
+  }
+  .picker a:hover { background: #f7f7f5; }
+  .lq { margin-top: 1.5em; border-top: none; padding-top: 0; }
+</style>
+</head>
+<body>
+<a class="back" id="back" href="../">← 수업 목록</a>
+<h1 id="title">핵심 정리 퀴즈</h1>
+<div class="picker" id="picker"></div>
+<div class="lq-mount"></div>
+
+<script src="questions.js"></script>
+<script src="quiz.js"></script>
+<script>
+  (function () {
+    var n = new URLSearchParams(location.search).get('lesson');
+    var data = window.LESSON_QUIZ || {};
+    if (n && data[n]) {
+      document.getElementById('title').textContent = data[n].title;
+      document.title = data[n].title + ' 퀴즈';
+      var back = document.getElementById('back');
+      if (/^\d+$/.test(n)) {
+        back.href = '../lesson' + n + '/';
+        back.textContent = '← ' + data[n].title + ' 수업 자료';
+      } else {
+        // 사이트에 수업 페이지가 없는 퀴즈(예: 노션에 임베드하는 ps1)는 돌아갈 링크를 숨김
+        back.style.display = 'none';
+      }
+    } else {
+      var picker = document.getElementById('picker');
+      Object.keys(data).forEach(function (k) {
+        var a = document.createElement('a');
+        a.href = '?lesson=' + k;
+        a.textContent = data[k].title + ' (' + data[k].questions.length + '문제)';
+        picker.appendChild(a);
+      });
+    }
+  })();
+</script>
+</body>
+</html>
